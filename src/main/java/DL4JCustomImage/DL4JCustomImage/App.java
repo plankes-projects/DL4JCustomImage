@@ -22,6 +22,7 @@ import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 
@@ -61,11 +62,11 @@ public class App {
 		// train model
 		int epochs = 10;
 		for (int i = 0; i < epochs; i++) {
-			// this is training with "batchSize" 1
-			// use multiple data in one model.fit call for multiple batchSize
 			System.out.println("Epoch: " + i);
-			model.fit(featureFromImage(DUCK_IMAGE), DUCK_LABEL);
-			model.fit(featureFromImage(DOG_IMAGE), DOG_LABEL);
+			DataSet ds1 = new DataSet(featureFromImage(DUCK_IMAGE), DUCK_LABEL);
+			DataSet ds2 = new DataSet(featureFromImage(DOG_IMAGE), DOG_LABEL);
+			DataSet dsMerge = DataSet.merge(Arrays.asList(ds1, ds2));
+			model.fit(dsMerge);
 		}
 
 		// test model
